@@ -1,2 +1,2 @@
 # lsl
-Driver software for Logitech devices for Linux
+Logitech Software for Linux ("LSL") is an open driver for logitech devices
