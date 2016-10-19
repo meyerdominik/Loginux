@@ -8,4 +8,4 @@ I created it because the official Logitech software "Logitech Gamimg Software", 
 
 # Planned supported devices
 - Logitech MX518
-- 
+- Logitech G930
