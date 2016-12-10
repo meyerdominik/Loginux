@@ -14,6 +14,13 @@ I invite everyone to help contributing to support more Logitech devices.
 - Logitech MX518
 - Logitech G930
 
+# Existing features
+- Configuring LED-Keys
+
+# Planned features
+- G-Keys
+- Key Heatmap
+
 
 # Installation
 
