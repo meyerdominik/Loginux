@@ -23,5 +23,6 @@ I invite everyone to help contributing to support more Logitech devices.
 
 
 # Installation
+It works out of the box. Just download it :)
 
-For using Loginux you need Java. I recommend using the Oracle-JDK, however OpenJDK (with OpenJFX installed) should also be fine.
+For using the small Loginux installation you need Java preinstalled. I recommend using the Oracle-JDK, however OpenJDK (with OpenJFX installed) should also be fine.
