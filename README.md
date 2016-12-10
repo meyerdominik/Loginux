@@ -20,6 +20,7 @@ I invite everyone to help contributing to support more Logitech devices.
 # Planned features
 - G-Keys
 - Key Heatmap
+- SDK for user-created modules
 
 
 # Installation
