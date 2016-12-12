@@ -1,5 +1,5 @@
 # Loginux
-Loginux (a.k.a. Logitech Software for Linux (short "LSL")) is an open driver software for logitech devices.
+Loginux is an open driver software for logitech devices.
 I created it because the official Logitech software "Logitech Gamimg Software", which is the driver for most Logitech devices, has no support for Linux.
 
 # Motivation
@@ -14,7 +14,16 @@ I invite everyone to help contributing to support more Logitech devices.
 - Logitech MX518
 - Logitech G930
 
+# Existing features
+- Configuring LED-Keys
+
+# Planned features
+- G-Keys
+- Key Heatmap
+- SDK for user-created modules
+
 
 # Installation
+It works out of the box. Just download it :)
 
-For using Loginux you need Java. I recommend using the Oracle-JDK, however OpenJDK (with OpenJFX installed) should also be fine.
+For using the small Loginux installation you need Java preinstalled. I recommend using the Oracle-JDK, however OpenJDK (with OpenJFX installed) should also be fine.
