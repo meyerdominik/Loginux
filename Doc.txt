@@ -1,0 +1,8 @@
+Loginux Doc
+
+
+When coloring a key on the G910 56 packages are send between the keyboard and the host machine.
+In package 14 the colors are specified:
+
+
+Bytes 0x31, 0x32, 0x33 are the colors in RGB
