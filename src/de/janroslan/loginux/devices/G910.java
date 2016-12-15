@@ -6,7 +6,14 @@
 package de.janroslan.loginux.devices;
 
 import de.janroslan.loginux.usb.USBXUtils;
+import de.timetoerror.jputils.conf.ConfigurationFile;
+import de.timetoerror.jputils.img.ColorUtils;
+import java.util.ArrayList;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.usb.UsbDevice;
+import javax.usb.UsbException;
 
 /**
  *
@@ -14,13 +21,13 @@ import javax.usb.UsbDevice;
  */
 public class G910 extends OrionKeyboard {
 
+    private final static String config = "g910.cfg";
+
     public G910(UsbDevice device) {
-        super(
+        super(config,
                 device,
-                
-                // The G910 Keyboard protocol
+                // The G910 Keyboard protocol for commit
                 new byte[]{0x11, (byte) 0xff, 0x0f, 0x5d},
-                
                 // Base address for logos
                 new byte[]{0x11, (byte) 0xff, 0x0f, 0x3a, 0x00, 0x10, 0x00, 0x02}
         );
@@ -37,6 +44,53 @@ public class G910 extends OrionKeyboard {
             return false;
         }
         return false;
+    }
+
+    
+    @Override
+    public void resetDevice() {
+        try {
+            setAllKeys((byte) 0, (byte) 128, (byte) 128);
+        } catch (UsbException ex) {
+
+        }
+    }
+
+    
+    /**
+     *
+     * @param file
+     */
+    @Override
+    public void applyConfig(ConfigurationFile file) {
+
+        ArrayList<String> keys = new ArrayList<>();
+
+        int size = file.getInternalProperties().entrySet().size();
+
+        byte[] red = new byte[size];
+        byte[] green = new byte[size];
+        byte[] blue = new byte[size];
+
+        for (Entry<Object, Object> entry : file.getInternalProperties().entrySet()) {
+
+            int value = Integer.parseInt((String) entry.getValue());
+
+            for (int i = 0; i < size; i++) {
+                keys.add((String) entry.getKey());
+
+                red[i] = ColorUtils.red(value);
+                green[i] = ColorUtils.green(value);
+                blue[i] = ColorUtils.blue(value);
+            }
+
+        }
+
+        try {
+            setKey(red, green, blue, keys);
+        } catch (UsbException ex) {
+
+        }
     }
 
 }

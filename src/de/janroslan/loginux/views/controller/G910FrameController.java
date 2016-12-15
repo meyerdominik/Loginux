@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 
 /**
  * FXML Controller class
@@ -40,7 +41,7 @@ public class G910FrameController implements Initializable, AdvancedController {
     public void onInitFinished() {
         
         // Load RGB frame
-        hBoxContent.getChildren().add(FXUtils.loadFXML(getClass().getResource("/de/janroslan/loginux/views/frames/KeyboardRGBFrame.fxml")));
+        hBoxContent.getChildren().add(FXUtils.loadFXML(getClass().getResource("/de/janroslan/loginux/views/frames/RGBMethodChooserFrame.fxml")));
         
     }
 

@@ -5,7 +5,9 @@
  */
 package de.janroslan.loginux.devices;
 
-import de.janroslan.loginux.devices.enums.OrionKey;
+import de.timetoerror.jputils.img.ColorUtils;
+import java.util.ArrayList;
+import java.util.Map.Entry;
 import javax.usb.UsbControlIrp;
 import javax.usb.UsbDevice;
 import javax.usb.UsbException;
@@ -14,13 +16,13 @@ import javax.usb.UsbException;
  *
  * @author jackjan
  */
-public abstract class OrionKeyboard extends LogitechDevice {
+public abstract class OrionKeyboard extends LEDLogitechKeyboard {
 
     private final byte[] kbdProtocol;
     private final byte[] logoBaseAddresses;
 
-    public OrionKeyboard(UsbDevice device, byte[] keyboardProtocol, byte[] logoBaseAddresses) {
-        super(device);
+    public OrionKeyboard(String config, UsbDevice device, byte[] keyboardProtocol, byte[] logoBaseAddresses) {
+        super(config, device);
         this.kbdProtocol = keyboardProtocol;
         this.logoBaseAddresses = logoBaseAddresses;
     }
@@ -36,13 +38,44 @@ public abstract class OrionKeyboard extends LogitechDevice {
     public void setAllKeys(byte red, byte green, byte blue) throws UsbException {
         openInterface();
         try {
-            for (OrionKey k : OrionKey.values()) {
-                setSingleKey(k, red, green, blue);
+            for (Entry<String, Byte> k : keys.entrySet()) {
+                setSingleKey(k.getKey(), k.getValue(), red, green, blue);
             }
             commit();
         } finally {
             closeInterface();
         }
+    }
+
+    public void setKey(byte red, byte green, byte blue, String... keyName) throws UsbException {
+
+        setKey(new byte[]{red}, new byte[]{green}, new byte[]{blue}, keyName);
+    }
+
+    /**
+     * Colors a single key on the keyboard
+     *
+     * @param red
+     * @param green
+     * @param keyName
+     * @param blue
+     * @throws UsbException
+     */
+    public void setKey(byte[] red, byte[] green, byte[] blue, String... keyName) throws UsbException {
+        openInterface();
+        try {
+            for (int i = 0, j = 0; i < keyName.length; i++) {
+                setSingleKey(keyName[i], keys.get(keyName[i]), red[j], green[j], blue[j]);
+
+                if (j != red.length - 1) {
+                    j++;
+                }
+            }
+            commit();
+        } finally {
+            closeInterface();
+        }
+
     }
 
     /**
@@ -51,18 +84,28 @@ public abstract class OrionKeyboard extends LogitechDevice {
      * @param key
      * @param red
      * @param green
+     * @param keyName
      * @param blue
      * @throws UsbException
      */
-    public void setKey(OrionKey key, byte red, byte green, byte blue) throws UsbException {
-        openInterface();
-        try {
-            setSingleKey(key, red, green, blue);
-            commit();
-        } finally {
-            closeInterface();
-        }
+    public void setKey(byte red, byte green, byte blue, ArrayList<String> keyName) throws UsbException {
 
+        setKey(new byte[]{red}, new byte[]{green}, new byte[]{blue}, keyName.toArray(new String[keyName.size()]));
+    }
+
+    /**
+     * Colors a single key on the keyboard
+     *
+     * @param key
+     * @param red
+     * @param green
+     * @param keyName
+     * @param blue
+     * @throws UsbException
+     */
+    public void setKey(byte[] red, byte[] green, byte[] blue, ArrayList<String> keyName) throws UsbException {
+
+        setKey(red, green, blue, keyName.toArray(new String[keyName.size()]));
     }
 
     /**
@@ -75,12 +118,15 @@ public abstract class OrionKeyboard extends LogitechDevice {
      * @param blue
      * @throws UsbException
      */
-    private void setSingleKey(OrionKey key, byte red, byte green, byte blue) throws UsbException {
+    private void setSingleKey(String keyName, byte key, byte red, byte green, byte blue) throws UsbException {
 
         byte[] data;
 
+        // Save this action in config (if one exist)
+        applyActionInConfig(keyName, "" + ColorUtils.toIntColor(red, red, blue));
+
         // The logo keys have special 20 byte packets
-        if (key.equals(OrionKey.logo) || key.equals(OrionKey.logo2)) {
+        if (keyName.equals("logo") || keyName == "logo2") {
             data = new byte[20];
 
             // Key Adress group
@@ -106,7 +152,7 @@ public abstract class OrionKeyboard extends LogitechDevice {
             data[7] = 0x0e;
         }
 
-        data[8] = (byte) key.getValue();
+        data[8] = key;
         data[9] = red;
         data[10] = green;
         data[11] = blue;

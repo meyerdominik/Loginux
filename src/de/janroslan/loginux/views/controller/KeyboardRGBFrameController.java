@@ -10,9 +10,10 @@ import com.jfoenix.controls.JFXColorPicker;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 import de.janroslan.loginux.devices.G910;
-import de.janroslan.loginux.devices.enums.OrionKey;
+import de.janroslan.loginux.devices.OrionKeyboard;
 import de.timetoerror.jputils.jfx.AdvancedController;
 import java.net.URL;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,27 +39,27 @@ public class KeyboardRGBFrameController implements Initializable, AdvancedContro
     @FXML
     private JFXButton btnSetColor;
     
-    private G910 g910;
+    private OrionKeyboard keyboard;
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        // Init keyboard
+       keyboard = new G910(MainViewController.device);
     }    
 
     @Override
     public void onInitFinished() {
         
         // Populate list with keysSce
-        for(OrionKey k : OrionKey.values())
+        for(Entry<String, Byte> k : keyboard.getKeys().entrySet())
         {
-            listKeys.getItems().add(k.name());
+            listKeys.getItems().add(k.getKey());
         }
         
-        // Init keyboard
-       g910 = new G910(MainViewController.device);
+       
     }
 
     @Override
@@ -74,13 +75,11 @@ public class KeyboardRGBFrameController implements Initializable, AdvancedContro
     }
     
     @FXML
-    public void onBtnSetColorClicked(ActionEvent evt)
+    public void onBtnSetColorClicked(ActionEvent evt) throws UsbException
     {
-        try {
-            g910.setKey(OrionKey.valueOf(listKeys.getSelectionModel().getSelectedItem().toString()), (byte)Math.round(colorPickerRGB.getValue().getRed() * 255.0), (byte)Math.round(colorPickerRGB.getValue().getGreen() * 255.0), (byte)Math.round(colorPickerRGB.getValue().getBlue() * 255.0));
-        } catch (UsbException ex) {
-           
-        }
+        
+            keyboard.setKey((byte)Math.round(colorPickerRGB.getValue().getRed() * 255.0), (byte)Math.round(colorPickerRGB.getValue().getGreen() * 255.0), (byte)Math.round(colorPickerRGB.getValue().getBlue() * 255.0),listKeys.getSelectionModel().getSelectedItem().toString());
+         
     }
     
     
