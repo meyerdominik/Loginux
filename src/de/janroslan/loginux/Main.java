@@ -25,9 +25,9 @@ public class Main extends Application {
 
         FXUtils.openWindow(getClass().getResource("/de/janroslan/loginux/views/MainView.fxml"), null, "Loginux", stage);
 
-        //stage.addEventFilter(KeyEvent.KEY_PRESSED, x -> {
-         //   System.out.println(x.getCode());
-        //});
+        stage.addEventFilter(KeyEvent.KEY_PRESSED, x -> {
+            System.out.println(x.getCode());
+        });
 
     }
 

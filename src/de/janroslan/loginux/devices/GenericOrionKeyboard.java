@@ -15,7 +15,9 @@ import javax.usb.UsbDevice;
  */
 public class GenericOrionKeyboard extends OrionKeyboard {
     
+    
     private static String config = "g810.cfg";
+    
     
     public GenericOrionKeyboard(UsbDevice device) {
         super(config,
@@ -40,11 +42,13 @@ public class GenericOrionKeyboard extends OrionKeyboard {
         }
     }
 
+    
     @Override
     public void resetDevice() {
         
     }
 
+    
     @Override
     public void applyConfig(ConfigurationFile file) {
         

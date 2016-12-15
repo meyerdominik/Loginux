@@ -63,10 +63,12 @@ public class MainViewController implements Initializable, AdvancedController {
         label.setText("Hello World!");
     }
 
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
+    
 
     @Override
     public void onInitFinished() {
@@ -78,6 +80,7 @@ public class MainViewController implements Initializable, AdvancedController {
         populateProfiles();
     }
 
+    
     @FXML
     public void onBtnNewProfileClicked(ActionEvent evt) {
 
@@ -92,11 +95,9 @@ public class MainViewController implements Initializable, AdvancedController {
             cmbBoxProfile.getItems().add(result.get());
             cmbBoxProfile.getSelectionModel().selectLast();
         }
-        
-        
-
     }
 
+    
     private void populateDevices() {
         for (UsbDevice d : USBXUtils.listDevices()) {
             try {
@@ -109,11 +110,13 @@ public class MainViewController implements Initializable, AdvancedController {
         }
     }
 
+    
     @Override
     public void onUnload() {
 
     }
 
+    
     public void populateProfiles() {
 
         ArrayList<Profile> profiles = ProfileManager.getInstance().listProfiles();
@@ -123,6 +126,7 @@ public class MainViewController implements Initializable, AdvancedController {
         }
     }
 
+    
     @FXML
     public void onDeviceChanged(ActionEvent evt) {
         try {
@@ -148,6 +152,7 @@ public class MainViewController implements Initializable, AdvancedController {
 
     }
 
+    
     /**
      * Gets called when the user changes the selected profile in the ComboBox
      *

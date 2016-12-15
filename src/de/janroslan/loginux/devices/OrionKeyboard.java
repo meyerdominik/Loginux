@@ -120,6 +120,10 @@ public abstract class OrionKeyboard extends LEDLogitechKeyboard {
      */
     private void setSingleKey(String keyName, byte key, byte red, byte green, byte blue) throws UsbException {
 
+        if (key == 0 || keyName == null) {
+            return;
+        }
+
         byte[] data;
 
         // Save this action in config (if one exist)

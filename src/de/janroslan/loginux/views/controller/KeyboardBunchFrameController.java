@@ -8,7 +8,6 @@ package de.janroslan.loginux.views.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXColorPicker;
 import de.janroslan.loginux.devices.G910;
-import de.janroslan.loginux.devices.LEDLogitechKeyboard;
 import de.janroslan.loginux.devices.OrionKeyboard;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -30,6 +29,12 @@ public class KeyboardBunchFrameController implements Initializable {
 
     @FXML
     private JFXButton btnRecord;
+
+    @FXML
+    private Label lblText;
+
+    @FXML
+    private Label lblKeys;
 
     @FXML
     private JFXColorPicker colorPicker;
@@ -60,7 +65,7 @@ public class KeyboardBunchFrameController implements Initializable {
         if (!selKeys.isEmpty()) {
 
             try {
-                
+
                 g910.setKey((byte) Math.round(colorPicker.getValue().getRed() * 255.0), (byte) Math.round(colorPicker.getValue().getGreen() * 255.0), (byte) Math.round(colorPicker.getValue().getBlue() * 255.0), selKeys);
             } catch (Exception ex) {
 
@@ -74,16 +79,23 @@ public class KeyboardBunchFrameController implements Initializable {
         if (!record) {
             record = true;
             btnRecord.setText("Stop record");
+            lblText.setText("Click on the keys on your keyboard you want to colorize after recording");
             selKeys.clear();
+            lblText.setText("");
 
             // 
             btnRecord.getParent().getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                selKeys.add(event.getCode().getName());
+
+                if (!selKeys.contains(event.getCode().getName())) {
+                    selKeys.add(event.getCode().getName());
+                    lblKeys.setText(lblKeys.getText() + event.getCode().getName() + ", ");
+                }
             });
 
         } else {
             record = false;
             btnRecord.setText("Record keys");
+            lblText.setText("Now choose a color for your selected keys or select other keys");
         }
     }
 }

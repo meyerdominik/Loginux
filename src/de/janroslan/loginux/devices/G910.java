@@ -9,9 +9,8 @@ import de.janroslan.loginux.usb.USBXUtils;
 import de.timetoerror.jputils.conf.ConfigurationFile;
 import de.timetoerror.jputils.img.ColorUtils;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.usb.UsbDevice;
 import javax.usb.UsbException;
 
@@ -32,9 +31,10 @@ public class G910 extends OrionKeyboard {
                 new byte[]{0x11, (byte) 0xff, 0x0f, 0x3a, 0x00, 0x10, 0x00, 0x02}
         );
 
+        addExtraKeys();
+
     }
 
-    
     public static boolean isThisDevice(UsbDevice device) {
         try {
             if (USBXUtils.getDeviceName(device).contains("G910")) {
@@ -46,7 +46,6 @@ public class G910 extends OrionKeyboard {
         return false;
     }
 
-    
     @Override
     public void resetDevice() {
         try {
@@ -56,7 +55,6 @@ public class G910 extends OrionKeyboard {
         }
     }
 
-    
     /**
      *
      * @param file
@@ -91,6 +89,17 @@ public class G910 extends OrionKeyboard {
         } catch (UsbException ex) {
 
         }
+    }
+
+    public void addExtraKeys() {
+        HashMap<String, Byte> extra = new HashMap<String, Byte>() {
+            {
+                put("logo", (byte) 0x01);
+                put("logo2", (byte) 0x02);
+            }
+        };
+        
+        keys.putAll(extra);
     }
 
 }
