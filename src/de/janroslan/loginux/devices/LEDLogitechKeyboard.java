@@ -40,14 +40,17 @@ public abstract class LEDLogitechKeyboard extends LogitechDevice {
                 // put("logo2", (byte) 0x02);
                 // put("backlight", (byte) 0x01);
                 // put("game", (byte) 0x02);
+                
                 put("caps", (byte) 0x03);
                 put("scroll", (byte) 0x04);
                 put("num", (byte) 0x05);
+                
                 // put("next", (byte) 0xb5);
                 // put("prev", (byte) 0xb6);
                 // put("stop", (byte) 0xb7);
                 // put("play", (byte) 0xcd);
                 // put("mute", (byte) 0xe2);
+                
                 put("g1", (byte) 0x01);
                 put("g2", (byte) 0x02);
                 put("g3", (byte) 0x03);

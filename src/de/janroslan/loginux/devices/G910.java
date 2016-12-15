@@ -18,7 +18,7 @@ import javax.usb.UsbException;
  *
  * @author jackjan
  */
-public class G910 extends OrionKeyboard {
+public final class G910 extends OrionKeyboard {
 
     private final static String config = "g910.cfg";
 
@@ -91,7 +91,7 @@ public class G910 extends OrionKeyboard {
         }
     }
 
-    public void addExtraKeys() {
+    public final void addExtraKeys() {
         HashMap<String, Byte> extra = new HashMap<String, Byte>() {
             {
                 put("logo", (byte) 0x01);
