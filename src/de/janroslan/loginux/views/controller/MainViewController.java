@@ -13,6 +13,7 @@ import de.janroslan.loginux.profiles.DeviceProfile;
 import de.janroslan.loginux.profiles.Profile;
 import de.janroslan.loginux.profiles.ProfileManager;
 import de.janroslan.loginux.usb.USBXUtils;
+import de.timetoerror.jputils.conf.Configuration;
 import de.timetoerror.jputils.jfx.AdvancedController;
 import de.timetoerror.jputils.jfx.FXUtils;
 import java.io.UnsupportedEncodingException;
@@ -24,10 +25,12 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javax.usb.UsbDevice;
 import javax.usb.UsbException;
 
@@ -63,12 +66,10 @@ public class MainViewController implements Initializable, AdvancedController {
         label.setText("Hello World!");
     }
 
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
-    
 
     @Override
     public void onInitFinished() {
@@ -78,9 +79,23 @@ public class MainViewController implements Initializable, AdvancedController {
 
         // Populate Profile chooser
         populateProfiles();
+
+        // Check for startup profile
+        Profile p = null;
+        String s = Configuration.getInstance(false).getKey("startupprofile");
+        if (s != null && !s.equals("")) {
+            p = ProfileManager.getInstance().loadProfile(s);
+        }
+        if (p != null) {
+            for (LogitechDevice d : LogitechDevice.listDevices()) {
+                DeviceProfile dp = p.getDeviceProfile(d.getConfigName());
+                if (dp != null) {
+                    d.applyConfig(dp.getConfiguration());
+                }
+            }
+        }
     }
 
-    
     @FXML
     public void onBtnNewProfileClicked(ActionEvent evt) {
 
@@ -91,13 +106,12 @@ public class MainViewController implements Initializable, AdvancedController {
 
         if (result.isPresent()) {
             Profile p = ProfileManager.getInstance().newProfile(result.get(), LogitechDevice.listDevices());
-            
+
             cmbBoxProfile.getItems().add(result.get());
             cmbBoxProfile.getSelectionModel().selectLast();
         }
     }
 
-    
     private void populateDevices() {
         for (UsbDevice d : USBXUtils.listDevices()) {
             try {
@@ -108,15 +122,26 @@ public class MainViewController implements Initializable, AdvancedController {
 
             }
         }
+
+        // Alert when no device found
+        if (cmbBoxDevices.getItems().isEmpty()) {
+            Alert al = new Alert(Alert.AlertType.INFORMATION);
+            al.setHeaderText("No Logitech devices found");
+            al.setContentText("Are you sure you started this programm as 'sudo'?");
+            al.show();
+        }
     }
 
-    
     @Override
     public void onUnload() {
 
     }
 
-    
+    @FXML
+    public void onBtnSettingsClicked() {
+        FXUtils.openWindow(getClass().getResource("/de/janroslan/loginux/views/SettingsView.fxml"), null, "Loginux", (Stage) cmbBoxDevices.getScene().getWindow());
+    }
+
     public void populateProfiles() {
 
         ArrayList<Profile> profiles = ProfileManager.getInstance().listProfiles();
@@ -126,7 +151,6 @@ public class MainViewController implements Initializable, AdvancedController {
         }
     }
 
-    
     @FXML
     public void onDeviceChanged(ActionEvent evt) {
         try {
@@ -134,10 +158,13 @@ public class MainViewController implements Initializable, AdvancedController {
 
             if (device != null) {
                 Pane p = null;
+                URL url = null;
                 if (G910.isThisDevice(device)) {
-                    p = (Pane) FXUtils.loadFXML(getClass().getResource("/de/janroslan/loginux/views/frames/G910Frame.fxml"));
+                    url = getClass().getResource("/de/janroslan/loginux/views/frames/G910Frame.fxml");
 
                 }
+
+                p = (Pane) FXUtils.loadFXML(url);
 
                 if (p != null) {
                     p.setPrefHeight(Integer.MAX_VALUE);
@@ -152,7 +179,6 @@ public class MainViewController implements Initializable, AdvancedController {
 
     }
 
-    
     /**
      * Gets called when the user changes the selected profile in the ComboBox
      *

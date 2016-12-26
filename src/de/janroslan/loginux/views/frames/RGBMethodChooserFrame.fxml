@@ -14,7 +14,7 @@
                <children>
                   <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
                      <children>
-                        <FontAwesomeIconView glyphName="KEYBOARD_ALT" onMousePressed="#onBtnVirtualClicked" size="80" />
+                        <FontAwesomeIconView fx:id="btnVirtual" glyphName="KEYBOARD_ALT" onMousePressed="#onBtnVirtualClicked" size="80" />
                         <Label text="Select the keys you which to colorize on a virtual keyboard" textAlignment="CENTER" wrapText="true" />
                      </children>
                   </VBox>

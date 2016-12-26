@@ -6,11 +6,7 @@
 package de.janroslan.loginux.devices;
 
 import de.janroslan.loginux.usb.USBXUtils;
-import de.timetoerror.jputils.conf.ConfigurationFile;
-import de.timetoerror.jputils.img.ColorUtils;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import javax.usb.UsbDevice;
 import javax.usb.UsbException;
 
@@ -28,7 +24,9 @@ public final class G910 extends OrionKeyboard {
                 // The G910 Keyboard protocol for commit
                 new byte[]{0x11, (byte) 0xff, 0x0f, 0x5d},
                 // Base address for logos
-                new byte[]{0x11, (byte) 0xff, 0x0f, 0x3a, 0x00, 0x10, 0x00, 0x02}
+                new byte[]{0x11, (byte) 0xff, 0x0f, 0x3a, 0x00, 0x10, 0x00, 0x02},
+                // Base Address
+                null
         );
 
         addExtraKeys();
@@ -55,51 +53,30 @@ public final class G910 extends OrionKeyboard {
         }
     }
 
-    /**
-     *
-     * @param file
-     */
-    @Override
-    public void applyConfig(ConfigurationFile file) {
-
-        ArrayList<String> keys = new ArrayList<>();
-
-        int size = file.getInternalProperties().entrySet().size();
-
-        byte[] red = new byte[size];
-        byte[] green = new byte[size];
-        byte[] blue = new byte[size];
-
-        for (Entry<Object, Object> entry : file.getInternalProperties().entrySet()) {
-
-            int value = Integer.parseInt((String) entry.getValue());
-
-            for (int i = 0; i < size; i++) {
-                keys.add((String) entry.getKey());
-
-                red[i] = ColorUtils.red(value);
-                green[i] = ColorUtils.green(value);
-                blue[i] = ColorUtils.blue(value);
-            }
-
-        }
-
-        try {
-            setKey(red, green, blue, keys);
-        } catch (UsbException ex) {
-
-        }
-    }
-
     public final void addExtraKeys() {
-        HashMap<String, Byte> extra = new HashMap<String, Byte>() {
+        HashMap<String, Byte> extra1 = new HashMap<String, Byte>() {
             {
                 put("logo", (byte) 0x01);
                 put("logo2", (byte) 0x02);
             }
         };
-        
-        keys.putAll(extra);
+
+        HashMap<String, Byte> extra2 = new HashMap<String, Byte>() {
+            {
+                put("G1", (byte) 0x01);
+                put("G2", (byte) 0x02);
+                put("G3", (byte) 0x03);
+                put("G4", (byte) 0x04);
+                put("G5", (byte) 0x05);
+                put("G6", (byte) 0x06);
+                put("G7", (byte) 0x07);
+                put("G8", (byte) 0x08);
+                put("G9", (byte) 0x09);
+            }
+        };
+
+        extraKeys.add(extra1);
+        extraKeys.add(extra2);
     }
 
 }

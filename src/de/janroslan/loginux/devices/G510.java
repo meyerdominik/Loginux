@@ -5,6 +5,7 @@
  */
 package de.janroslan.loginux.devices;
 
+import de.janroslan.loginux.usb.USBXUtils;
 import de.timetoerror.jputils.conf.ConfigurationFile;
 import javax.usb.UsbDevice;
 
@@ -14,23 +15,32 @@ import javax.usb.UsbDevice;
  */
 public final class G510 extends OrionKeyboard {
 
+    
     private final static String config = "g510.cfg";
+    
     
     public G510(UsbDevice device, byte[] keyboardProtocol, byte[] logoBaseAddresses) {
         super(config,
                 device,
                 keyboardProtocol,
-                logoBaseAddresses);
+                logoBaseAddresses, null
+        );
     }
 
+    
     @Override
     public void resetDevice() {
         
     }
-
-    @Override
-    public void applyConfig(ConfigurationFile file) {
-        
-    }
     
+    
+    public static boolean isThisDevice(UsbDevice device) {
+        try {
+            if (USBXUtils.getDeviceName(device).contains("G510")) {
+                return true;
+            }
+        } finally {
+            return false;
+        }
+    }
 }

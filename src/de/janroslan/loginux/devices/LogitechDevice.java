@@ -45,42 +45,41 @@ public abstract class LogitechDevice {
     }
 
     protected void openInterface() throws UsbException {
-
         if (iface != null) {
-            throw new UsbClaimException("Interface already claimed");
+            throw new UsbClaimException("Interface already opened");
+
         }
 
+        // Open interface to device
         UsbConfiguration configuration = getDevice().getActiveUsbConfiguration();
         iface = configuration.getUsbInterface((byte) 1);
         iface.claim((UsbInterface usbInterface) -> true);
     }
 
-    
     /**
-     * 
+     *
      */
     public abstract void resetDevice();
 
-    
     /**
-     * 
-     * @param file 
+     *
+     * @param file
      */
     public abstract void applyConfig(ConfigurationFile file);
 
-    
     /**
      * Apply an action on this device in its config
+     *
      * @param key - The key on which this action should be saved in
-     * @param vlaue - The value of this action
+     * @param value - The value for the key
      */
-    public void applyActionInConfig(String key, String vlaue) {
+    public void applyActionInConfig(String key, String value) {
         Profile active = ProfileManager.getInstance().getActive();
 
         if (active != null) {
             DeviceProfile prof = active.getDeviceProfile(configName);
             if (prof != null) {
-                prof.getConfiguration().setKey(key, vlaue);
+                prof.getConfiguration().setKey(key, value);
             }
         }
     }

@@ -23,9 +23,7 @@ public class DeviceProfile {
         conf = new ConfigurationFile(file,"");
     }
 
-    DeviceProfile() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
     
     
     

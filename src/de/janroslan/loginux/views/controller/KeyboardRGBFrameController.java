@@ -9,10 +9,11 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXColorPicker;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
-import de.janroslan.loginux.devices.G910;
+import de.janroslan.loginux.devices.LogitechDevice;
 import de.janroslan.loginux.devices.OrionKeyboard;
 import de.timetoerror.jputils.jfx.AdvancedController;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -20,7 +21,6 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.input.MouseEvent;
 import javax.usb.UsbException;
 
 /**
@@ -38,55 +38,71 @@ public class KeyboardRGBFrameController implements Initializable, AdvancedContro
     private JFXColorPicker colorPickerRGB;
     @FXML
     private JFXButton btnSetColor;
-    
+    @FXML
+    private JFXColorPicker colorPickerAll;
+
     private OrionKeyboard keyboard;
-    
+
     /**
      * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Init keyboard
-       keyboard = new G910(MainViewController.device);
-    }    
+        keyboard = (OrionKeyboard) LogitechDevice.getAsLogiDevice(MainViewController.device);
+    }
 
     @Override
     public void onInitFinished() {
-        
-        // Populate list with keysSce
-        for(Entry<String, Byte> k : keyboard.getKeys().entrySet())
-        {
+
+        // Populate list with keys
+        for (Entry<String, Byte> k : keyboard.getKeys().entrySet()) {
             listKeys.getItems().add(k.getKey());
         }
-        
-       
+
+        // Populate list with extra keys
+        for (HashMap<String, Byte> h : keyboard.getExtraKeys()) {
+            for (Entry<String, Byte> k : h.entrySet()) {
+                listKeys.getItems().add(k.getKey());
+            }
+        }
+
     }
 
     @Override
     public void onUnload() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    }
+
+    @FXML
+    public void onBtnSetColorAllClicked(ActionEvent evt)
+    {
+        try {
+            keyboard.setAllKeys((byte) Math.round(colorPickerAll.getValue().getRed() * 255.0), (byte) Math.round(colorPickerAll.getValue().getGreen() * 255.0), (byte) Math.round(colorPickerAll.getValue().getBlue() * 255.0));
+        } catch (UsbException ex) {
+            
+        }
     }
     
     
     @FXML
-    public void onColorChanged(ActionEvent evt)
-    {
-        
+    public void onColorChanged(ActionEvent evt) {
+
     }
-    
+
     @FXML
-    public void onBtnSetColorClicked(ActionEvent evt) throws UsbException
-    {
-        
-            keyboard.setKey((byte)Math.round(colorPickerRGB.getValue().getRed() * 255.0), (byte)Math.round(colorPickerRGB.getValue().getGreen() * 255.0), (byte)Math.round(colorPickerRGB.getValue().getBlue() * 255.0),listKeys.getSelectionModel().getSelectedItem().toString());
-         
+    public void onBtnSetColorClicked(ActionEvent evt) throws UsbException {
+
+        keyboard.setKey((byte) Math.round(colorPickerRGB.getValue().getRed() * 255.0), (byte) Math.round(colorPickerRGB.getValue().getGreen() * 255.0), (byte) Math.round(colorPickerRGB.getValue().getBlue() * 255.0), listKeys.getSelectionModel().getSelectedItem().toString());
+
     }
-    
-    
+
     @FXML
-    public void ontxtSearchPressed(ActionEvent evt)
-    {
-        
+    public void ontxtSearchPressed(ActionEvent evt) {
+
     }
-    
+
 }

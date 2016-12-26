@@ -5,6 +5,7 @@
  */
 package de.janroslan.loginux.devices;
 
+import de.janroslan.loginux.usb.USBXUtils;
 import de.timetoerror.jputils.conf.ConfigurationFile;
 import javax.usb.UsbDevice;
 
@@ -20,7 +21,8 @@ public final class G810 extends OrionKeyboard{
         super(config,
                 device,
                 keyboardProtocol,
-                logoBaseAddresses);
+                logoBaseAddresses,
+                null);
     }
 
     @Override
@@ -28,9 +30,15 @@ public final class G810 extends OrionKeyboard{
         
     }
 
-    @Override
-    public void applyConfig(ConfigurationFile file) {
-        
+    
+    public static boolean isThisDevice(UsbDevice device) {
+        try {
+            if (USBXUtils.getDeviceName(device).contains("G810")) {
+                return true;
+            }
+        } finally {
+            return false;
+        }
     }
     
 }

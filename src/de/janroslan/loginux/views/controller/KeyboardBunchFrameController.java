@@ -8,6 +8,7 @@ package de.janroslan.loginux.views.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXColorPicker;
 import de.janroslan.loginux.devices.G910;
+import de.janroslan.loginux.devices.LogitechDevice;
 import de.janroslan.loginux.devices.OrionKeyboard;
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class KeyboardBunchFrameController implements Initializable {
         record = false;
 
         // Init keyboard
-        g910 = new G910(MainViewController.device);
+        g910 = (OrionKeyboard)LogitechDevice.getAsLogiDevice(MainViewController.device);
 
         selKeys = new ArrayList<>();
 

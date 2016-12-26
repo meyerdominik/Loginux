@@ -27,7 +27,10 @@ public class GenericOrionKeyboard extends OrionKeyboard {
                 new byte[] { 0x11,(byte)0xff,0x0c,0x5a},
                 
                 // Base addres for the logos on the keyboard
-                new byte[] { 0x11,(byte)0xff,0x0c,0x3a, 0x00, 0x10,0x00,0x01}
+                new byte[] { 0x11,(byte)0xff,0x0c,0x3a, 0x00, 0x10,0x00,0x01},
+                
+                // Base Addresses
+                null
         );
     }
 

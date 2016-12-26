@@ -21,7 +21,6 @@ import javax.usb.UsbServices;
  */
 public class USBXUtils {
 
-    
     /**
      * Lists all available devices connected to the machine (UsbHostManager)
      *
@@ -35,34 +34,31 @@ public class USBXUtils {
 
             processDevice(serv.getRootUsbHub(), result);
         } catch (Exception ex) {
+            System.out.println("test");
+            ex.printStackTrace();
         }
 
         return result;
     }
-    
-    
+
     /**
-     * 
+     *
      * @param name
-     * @return 
+     * @return
      */
-    public static UsbDevice getDeviceByName(String name) throws UsbException, UnsupportedEncodingException
-    {
+    public static UsbDevice getDeviceByName(String name) throws UsbException, UnsupportedEncodingException {
         UsbDevice result = null;
-        
-        for(UsbDevice d : listDevices())
-        {
-            if (getDeviceName(d).equals(name))
-            {
+
+        for (UsbDevice d : listDevices()) {
+            if (getDeviceName(d).equals(name)) {
                 result = d;
                 break;
             }
         }
-        
+
         return result;
     }
 
-    
     private static void processDevice(UsbDevice device, ArrayList<UsbDevice> result) {
         // When device is a hub then process all child devices
         if (device.isUsbHub()) {
@@ -76,7 +72,6 @@ public class USBXUtils {
         }
     }
 
-    
     /**
      * Returns the full name (vendor + device name) of a UsbDevice
      *
@@ -87,18 +82,22 @@ public class USBXUtils {
      */
     public static String getDeviceName(UsbDevice device) throws UsbException, UnsupportedEncodingException {
 
-        // Read the string descriptor indices from the device descriptor.
-        final UsbDeviceDescriptor desc = device.getUsbDeviceDescriptor();
-        final byte iManufacturer = desc.iManufacturer();
-        final byte iProduct = desc.iProduct();
+        if (device != null) {
+            // Read the string descriptor indices from the device descriptor.
+            final UsbDeviceDescriptor desc = device.getUsbDeviceDescriptor();
+            final byte iManufacturer = desc.iManufacturer();
+            final byte iProduct = desc.iProduct();
 
-        // If they are missing then ignore the device.
-        if (iManufacturer == 0 || iProduct == 0) {
+            // If they are missing then ignore the device.
+            if (iManufacturer == 0 || iProduct == 0) {
+                return null;
+            }
+
+            // Return the device name
+            return device.getString(iManufacturer) + " " + device.getString(iProduct);
+        } else {
+
             return null;
         }
-
-        // Return the device name
-        return device.getString(iManufacturer) + " " + device.getString(iProduct);
     }
-
 }
